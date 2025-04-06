@@ -47,6 +47,10 @@ public class UrlMapping {
   public Long getClickCount(){
     return clickCount;
   }
+
+  public String getOriginalUrl(){
+    return originalUrl;
+  }
   // #endregion
 
   // #region Setters
@@ -60,6 +64,14 @@ public class UrlMapping {
 
   public void setShortCode(String shortCode){
     this.shortCode = shortCode;
+  }
+
+  public void incrementClickCount(){
+    this.clickCount += 1;
+  }
+
+  public void setClickCount(Long clickCount){
+    this.clickCount = clickCount;
   }
   //#endregion 
 

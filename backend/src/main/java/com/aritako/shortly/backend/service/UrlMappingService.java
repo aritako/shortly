@@ -21,4 +21,13 @@ public class UrlMappingService {
     urlMappingRepository.save(urlMapping);
     return shortCode;
   }
+
+  public String getOriginalUrl(String shortcode){
+    UrlMapping urlMapping = urlMappingRepository
+    .findByShortCode(shortcode).orElseThrow(() -> new RuntimeException("Short code not found"));
+
+    urlMapping.incrementClickCount();
+    urlMappingRepository.save(urlMapping);
+    return urlMapping.getOriginalUrl();
+  }
 }
