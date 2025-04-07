@@ -16,6 +16,11 @@ public class UrlMappingController {
     this.urlMappingService = urlMappingService;
   }
 
+  @GetMapping
+  public ResponseEntity<String> test(){
+    return ResponseEntity.ok("Hello World!!!");
+  }
+
   @PostMapping("/shorten")
   public ResponseEntity<Map<String, String>> shorten(@RequestBody Map<String, String> body){
     UUID userId = UUID.fromString(body.get("userId"));
