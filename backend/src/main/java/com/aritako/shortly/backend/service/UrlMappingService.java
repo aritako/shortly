@@ -23,12 +23,23 @@ public class UrlMappingService {
     return shortCode;
   }
 
-  public String getOriginalUrl(String shortcode){
+  public String redirectUrl(String shortCode){
     UrlMapping urlMapping = urlMappingRepository
-    .findByShortCode(shortcode)
-    .orElseThrow(() -> new RuntimeException("Short code not found: " + shortcode));
+    .findByShortCode(shortCode)
+    .orElseThrow(() -> new RuntimeException("Short code not found: " + shortCode));
+    this.incrementClickCount(urlMapping);
+    return urlMapping.getOriginalUrl();
+  }
+
+  public void incrementClickCount(UrlMapping urlMapping){
     urlMapping.incrementClickCount();
     urlMappingRepository.save(urlMapping);
-    return urlMapping.getOriginalUrl();
+  }
+
+  public UrlMapping getUrlMappingInfo(String shortCode){
+    UrlMapping urlMapping = urlMappingRepository
+    .findByShortCode(shortCode)
+    .orElseThrow(() -> new RuntimeException("Short code not found: " + shortCode));
+    return urlMapping;
   }
 }

@@ -8,10 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.aritako.shortly.backend.model.UrlMapping;
 import com.aritako.shortly.backend.service.UrlMappingService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping
 public class UrlMappingController {
 
   @Value("${BASE_URL}")
@@ -31,17 +32,17 @@ public class UrlMappingController {
     return ResponseEntity.ok(Map.of("shortUrl", baseUrl + "/" + shortCode));
   }
 
-  @GetMapping("/{shortcode}")
-  public ResponseEntity<Void> redirect(@PathVariable String shortcode){
-    String target = urlMappingService.getOriginalUrl(shortcode);
+  @GetMapping("/{shortCode}")
+  public ResponseEntity<Void> redirect(@PathVariable String shortCode){
+    String target = urlMappingService.redirectUrl(shortCode);
     return ResponseEntity.status(HttpStatus.FOUND)
     .header(HttpHeaders.LOCATION, target)
     .build();
   }
 
-  @GetMapping("/get/{shortcode}")
-  public ResponseEntity<Map<String,String>> getOriginalUrl(@PathVariable String shortcode){
-    String originalUrl = this.urlMappingService.getOriginalUrl(shortcode);
-    return ResponseEntity.ok(Map.of("originalUrl", originalUrl));
+  @GetMapping("/info/{shortCode}")
+  public ResponseEntity<UrlMapping> getOriginalUrl(@PathVariable String shortCode){
+    UrlMapping urlMappingInfo = this.urlMappingService.getUrlMappingInfo(shortCode);
+    return ResponseEntity.ok(urlMappingInfo);
   }
 }
