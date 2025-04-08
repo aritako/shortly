@@ -3,6 +3,8 @@ package com.aritako.shortly.backend.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,14 @@ public class UrlMappingController {
   }
 
   @GetMapping("/{shortcode}")
+  public ResponseEntity<Void> redirect(@PathVariable String shortcode){
+    String target = urlMappingService.getOriginalUrl(shortcode);
+    return ResponseEntity.status(HttpStatus.FOUND)
+    .header(HttpHeaders.LOCATION, target)
+    .build();
+  }
+
+  @GetMapping("/get/{shortcode}")
   public ResponseEntity<Map<String,String>> getOriginalUrl(@PathVariable String shortcode){
     String originalUrl = this.urlMappingService.getOriginalUrl(shortcode);
     return ResponseEntity.ok(Map.of("originalUrl", originalUrl));
