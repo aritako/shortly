@@ -2,6 +2,7 @@ package com.aritako.shortly.backend.controller;
 
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,15 +11,14 @@ import com.aritako.shortly.backend.service.UrlMappingService;
 @RestController
 @RequestMapping("/api")
 public class UrlMappingController {
+
+  @Value("${BASE_URL}")
+  private String baseUrl;
+
   private final UrlMappingService urlMappingService;
 
   public UrlMappingController(UrlMappingService urlMappingService){
     this.urlMappingService = urlMappingService;
-  }
-
-  @GetMapping
-  public ResponseEntity<String> test(){
-    return ResponseEntity.ok("Hello World!!!");
   }
 
   @PostMapping("/shorten")
@@ -26,7 +26,12 @@ public class UrlMappingController {
     UUID userId = UUID.fromString(body.get("userId"));
     String originalUrl = body.get("url");
     String shortCode = urlMappingService.shortenUrl(userId, originalUrl);
-    
-    return ResponseEntity.ok(Map.of("shortUrl", "http://localhost:8080/" + shortCode));
+    return ResponseEntity.ok(Map.of("shortUrl", baseUrl + "/" + shortCode));
+  }
+
+  @GetMapping("/{shortcode}")
+  public ResponseEntity<Map<String,String>> getOriginalUrl(@PathVariable String shortcode){
+    String originalUrl = this.urlMappingService.getOriginalUrl(shortcode);
+    return ResponseEntity.ok(Map.of("originalUrl", originalUrl));
   }
 }

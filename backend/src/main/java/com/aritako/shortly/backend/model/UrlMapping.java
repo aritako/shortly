@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "url_mappings")
 public class UrlMapping {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,8 @@ public class UrlMapping {
   private LocalDateTime createdAt = LocalDateTime.now();
 
   // #region Constructor
+  public UrlMapping(){}
+  
   public UrlMapping(UUID userId, String originalUrl, String shortCode) {
     this.userId = userId;
     this.originalUrl  = originalUrl;
