@@ -26,7 +26,7 @@ public class UrlMappingController {
 
   @PostMapping("/shorten")
   public ResponseEntity<Map<String, String>> shorten(@RequestBody Map<String, String> body){
-    UUID userId = UUID.fromString(body.get("userId"));
+    Long userId = Long.valueOf(body.get("userId"));
     String originalUrl = body.get("url");
     String shortCode = urlMappingService.shortenUrl(userId, originalUrl);
     return ResponseEntity.ok(Map.of("shortUrl", baseUrl + "/" + shortCode));

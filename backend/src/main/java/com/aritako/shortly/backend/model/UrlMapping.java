@@ -3,7 +3,6 @@ package com.aritako.shortly.backend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "url_mappings")
@@ -12,16 +11,17 @@ public class UrlMapping {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "user_id", nullable = false)
-  private UUID userId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   @Column(name = "original_url", nullable = false)
   private String originalUrl;
 
-  @Column(name = "short_code", nullable = false)
+  @Column(name = "short_code", nullable = false, unique = true)
   private String shortCode;
 
-  @Column(name = "click_count", columnDefinition = "TEXT")
+  @Column(name = "click_count")
   private Long clickCount = 0L;
 
   @Column(name = "created_at")
@@ -30,8 +30,8 @@ public class UrlMapping {
   // #region Constructor
   public UrlMapping(){}
   
-  public UrlMapping(UUID userId, String originalUrl, String shortCode) {
-    this.userId = userId;
+  public UrlMapping(User user, String originalUrl, String shortCode) {
+    this.user = user;
     this.originalUrl  = originalUrl;
     this.shortCode = shortCode;
     this.clickCount = 0L;
@@ -43,8 +43,8 @@ public class UrlMapping {
     return id;
   }
 
-  public UUID getUserId(){
-    return userId;
+  public User getUser(){
+    return user;
   }
 
   public Long getClickCount(){
@@ -57,8 +57,8 @@ public class UrlMapping {
   // #endregion
 
   // #region Setters
-  public void setUserId(UUID userId){
-    this.userId = userId;
+  public void setUserId(User user){
+    this.user = user;
   }
 
   public void setOriginalUrl(String originalUrl){

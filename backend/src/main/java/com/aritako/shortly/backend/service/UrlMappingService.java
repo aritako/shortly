@@ -5,20 +5,27 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.aritako.shortly.backend.model.UrlMapping;
+import com.aritako.shortly.backend.model.User;
 import com.aritako.shortly.backend.repository.UrlMappingRepository;
+import com.aritako.shortly.backend.repository.UserRepository;
 @Service
 public class UrlMappingService {
   private final UrlMappingRepository urlMappingRepository;
+  private final UserRepository userRepository;
 
-  public UrlMappingService(UrlMappingRepository urlMappingRepository){
+  public UrlMappingService(UrlMappingRepository urlMappingRepository, UserRepository userRepository){
     this.urlMappingRepository = urlMappingRepository;
+    this.userRepository = userRepository;
   }
 
-  public String shortenUrl(UUID userId, String originalUrl){
+  public String shortenUrl(Long userId, String originalUrl){
     String shortCode = UUID.randomUUID()
     .toString().replace("-", "")
     .substring(0, 12);
-    UrlMapping urlMapping = new UrlMapping(userId, originalUrl, shortCode);
+    User user = userRepository
+    .findById(userId)
+    .orElseThrow(() -> new RuntimeException("User not found for: " + shortCode));
+    UrlMapping urlMapping = new UrlMapping(user, originalUrl, shortCode);
     urlMappingRepository.save(urlMapping);
     return shortCode;
   }
