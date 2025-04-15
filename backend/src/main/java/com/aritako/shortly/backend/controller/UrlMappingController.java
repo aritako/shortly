@@ -42,7 +42,7 @@ public class UrlMappingController {
 
   @GetMapping("/info/{shortCode}")
   public ResponseEntity<UrlMapping> getOriginalUrl(@PathVariable String shortCode){
-    UrlMapping urlMappingInfo = this.urlMappingService.getUrlMappingInfo(shortCode);
+    UrlMapping urlMappingInfo = urlMappingService.getUrlMappingInfo(shortCode);
     return ResponseEntity.ok(urlMappingInfo);
   }
 }
