@@ -12,7 +12,7 @@ import com.aritako.shortly.backend.model.UrlMapping;
 import com.aritako.shortly.backend.service.UrlMappingService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/url")
 public class UrlMappingController {
 
   @Value("${BASE_URL}")
