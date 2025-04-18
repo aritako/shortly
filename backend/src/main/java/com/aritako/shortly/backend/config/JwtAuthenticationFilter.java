@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
     ) throws ServletException, IOException {
       final String authHeader = request.getHeader("Authorization");
       final String jwt;
-      final String userName;
+      final String username;
 
       // Filter out unauthorized requests
       if(authHeader == null || !authHeader.startsWith("Bearer ")){
@@ -48,13 +48,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
       // Extract JWT
       jwt = authHeader.substring(7);
-      userName = jwtService.extractUsername(jwt);
+      username = jwtService.extractUsername(jwt);
 
       // Authentication Logic
-      if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null){
+      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
         // Optional contains the user if found, otherwise it is empty
         // This is a good use case for Optional, as it allows us to avoid null checks and handle the absence of a value gracefully.
-        Optional<User> optionalUser = userRepository.findByUsername(userName);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
           
           // isPresent is a method of Optional class to check for nullity
           if (optionalUser.isPresent()){
