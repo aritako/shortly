@@ -6,10 +6,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.aritako.shortly.backend.model.User;
 import com.aritako.shortly.backend.repository.UserRepository;
-
+@Service
 public class AuthService {
   
   private final UserRepository userRepository;
