@@ -45,6 +45,7 @@ public class JwtService {
   public String generateToken(User user){
     return Jwts.builder()
       .subject(user.getUsername())
+      .claim("role", user.getRole().name())
       .issuedAt(new Date(System.currentTimeMillis()))
       .expiration(new Date(System.currentTimeMillis() + jwtExpiration)) // 24h expiration
       .signWith(getSigningKey())
