@@ -18,10 +18,15 @@ public class UrlMappingService {
     this.userRepository = userRepository;
   }
 
-  public String shortenUrl(Long userId, String originalUrl){
-    String shortCode = UUID.randomUUID()
-    .toString().replace("-", "")
-    .substring(0, 12);
+  public String shortenUrl(Long userId, String originalUrl, String defaultShortCode){
+    // If the request came with a user-defined shortcode, return it
+    // Else, generate a random shortCode
+    final String shortCode = (defaultShortCode != null) 
+      ? defaultShortCode 
+      : UUID.randomUUID()
+        .toString().replace("-", "")
+        .substring(0, 12);
+
     User user = userRepository
     .findById(userId)
     .orElseThrow(() -> new RuntimeException("User not found for: " + shortCode));

@@ -3,8 +3,6 @@ package com.aritako.shortly.backend.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,19 +26,12 @@ public class UrlMappingController {
   public ResponseEntity<Map<String, String>> shorten(@RequestBody Map<String, String> body){
     Long userId = Long.valueOf(body.get("userId"));
     String originalUrl = body.get("url");
-    String shortCode = urlMappingService.shortenUrl(userId, originalUrl);
-    return ResponseEntity.ok(Map.of("shortUrl", baseUrl + "/" + shortCode));
+    String shortCode = body.getOrDefault("shortCode", null);
+    String generateShortCode = urlMappingService.shortenUrl(userId, originalUrl, shortCode);
+    return ResponseEntity.ok(Map.of("shortUrl", baseUrl + "/" + generateShortCode));
   }
 
   @GetMapping("/{shortCode}")
-  public ResponseEntity<Void> redirect(@PathVariable String shortCode){
-    String target = urlMappingService.redirectUrl(shortCode);
-    return ResponseEntity.status(HttpStatus.FOUND)
-    .header(HttpHeaders.LOCATION, target)
-    .build();
-  }
-
-  @GetMapping("/info/{shortCode}")
   public ResponseEntity<UrlMapping> getOriginalUrl(@PathVariable String shortCode){
     UrlMapping urlMappingInfo = urlMappingService.getUrlMappingInfo(shortCode);
     return ResponseEntity.ok(urlMappingInfo);
