@@ -18,11 +18,18 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
   
   //#region Secrets
-  @Value("${jwt.secret}")
-  private String secretKey;
+  @Value("${jwt.access.secret}")
+  private String accessSecretKey;
+
+  @Value("${jwt.refresh.secret}")
+  private String refreshSecretKey;
   
-  @Value("${jwt.expiration}")
-  private long jwtExpiration;
+  @Value("${jwt.access.expiration}")
+  private long accessExpiration;
+
+  @Value("${jwt.refresh.expiration}")
+  private long refreshExpiration;
+
   //#endregion
 
   //#region Methods
@@ -35,20 +42,28 @@ public class JwtService {
 
 
   // Step 1: Create a signing key using the secret key
-  private SecretKey getSigningKey(){
+  private SecretKey getSigningKey(String secretKey){
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
   }
 
   // Step 2: Generate a JWT token using the signing key and user information
-  public String generateToken(User user){
+  public String generateToken(User user, long expiration, SecretKey key){
     return Jwts.builder()
       .subject(user.getUsername())
       .claim("role", user.getRole().name())
       .issuedAt(new Date(System.currentTimeMillis()))
-      .expiration(new Date(System.currentTimeMillis() + jwtExpiration)) // 24h expiration
-      .signWith(getSigningKey())
+      .expiration(new Date(System.currentTimeMillis() + expiration))
+      .signWith(key)
       .compact();
+  }
+
+  public String generateAccessToken(User user){
+    return generateToken(user, accessExpiration, getSigningKey(accessSecretKey));
+  }
+  
+  public String generateRefreshToken(User user){
+    return generateToken(user, refreshExpiration, getSigningKey(refreshSecretKey));
   }
 
   // Step 3: Extract the username and expiration date from the token
@@ -78,10 +93,28 @@ public class JwtService {
 
   private Claims extractAllClaims(String token) {
     return Jwts.parser()
-      .verifyWith(getSigningKey())
+      .verifyWith(getSigningKey(accessSecretKey))
       .build()
       .parseSignedClaims(token)
       .getPayload();
+  }
+  //#endregion
+
+  //#region Refresh Token Validation
+  public boolean isRefreshTokenValid(String token, User user) {
+    try {
+      final Claims claims = Jwts.parser()
+        .verifyWith(getSigningKey(refreshSecretKey))
+        .build()
+        .parseSignedClaims(token)
+        .getPayload();
+
+      final String username = claims.getSubject();
+      return username.equals(user.getUsername()) && claims.getExpiration().after(new Date());
+
+    } catch (JwtException e) {
+      return false;
+    }
   }
   //#endregion
 }

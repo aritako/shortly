@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.aritako.shortly.backend.service.AuthService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -30,10 +32,25 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body){
+  public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body, HttpServletRequest request){
     String username = body.get("username");
     String password = body.get("password");
 
-    return ResponseEntity.ok(authService.login(username, password));
+    String ipAddress = request.getRemoteAddr();
+    String userAgent = request.getHeader("User-Agent");
+    return ResponseEntity.ok(authService.login(username, password, ipAddress, userAgent));
+  }
+
+  @PostMapping("/refresh")
+  public ResponseEntity<Map<String, String>> refresh(@RequestBody Map<String, String> body){
+    String refreshToken = body.get("refreshToken");
+    return ResponseEntity.ok(authService.refreshAccessToken(refreshToken));
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout(@RequestBody Map<String, String> body){
+    String refreshToken = body.get("refreshToken");
+    authService.logout(refreshToken);
+    return ResponseEntity.noContent().build();
   }
 }
