@@ -1,6 +1,8 @@
-package com.aritako.shortly.backend.model;
+package com.aritako.shortly.backend.auth.model;
 
 import java.time.LocalDateTime;
+
+import com.aritako.shortly.backend.user.model.User;
 
 import jakarta.persistence.*;
 

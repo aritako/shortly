@@ -1,4 +1,4 @@
-package com.aritako.shortly.backend.controller;
+package com.aritako.shortly.backend.auth.controller;
 
 import java.util.*;
 
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.aritako.shortly.backend.service.AuthService;
+import com.aritako.shortly.backend.auth.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
 

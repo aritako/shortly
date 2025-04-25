@@ -1,4 +1,4 @@
-package com.aritako.shortly.backend.service;
+package com.aritako.shortly.backend.shared.service;
 
 import java.util.Date;
 import java.util.function.Function;
@@ -8,7 +8,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.aritako.shortly.backend.model.User;
+import com.aritako.shortly.backend.user.model.User;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

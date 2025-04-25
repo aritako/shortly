@@ -1,4 +1,4 @@
-package com.aritako.shortly.backend.model;
+package com.aritako.shortly.backend.user.model;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.aritako.shortly.backend.model.enums.UserRoles;
+import com.aritako.shortly.backend.user.variables.UserRoles;
 
 import jakarta.persistence.*;
 

@@ -1,13 +1,13 @@
-package com.aritako.shortly.backend.service;
+package com.aritako.shortly.backend.url.service;
 
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.aritako.shortly.backend.model.UrlMapping;
-import com.aritako.shortly.backend.model.User;
-import com.aritako.shortly.backend.repository.UrlMappingRepository;
-import com.aritako.shortly.backend.repository.UserRepository;
+import com.aritako.shortly.backend.url.model.UrlMapping;
+import com.aritako.shortly.backend.url.repository.UrlMappingRepository;
+import com.aritako.shortly.backend.user.model.User;
+import com.aritako.shortly.backend.user.repository.UserRepository;
 @Service
 public class UrlMappingService {
   private final UrlMappingRepository urlMappingRepository;

@@ -1,4 +1,4 @@
-package com.aritako.shortly.backend.model.enums;
+package com.aritako.shortly.backend.user.variables;
 
 public enum UserRoles {
   ADMIN,

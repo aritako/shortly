@@ -1,4 +1,4 @@
-package com.aritako.shortly.backend.config;
+package com.aritako.shortly.backend.shared.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.aritako.shortly.backend.repository.UserRepository;
+import com.aritako.shortly.backend.user.repository.UserRepository;
 
 @Configuration
 @EnableWebSecurity

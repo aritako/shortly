@@ -1,4 +1,4 @@
-package com.aritako.shortly.backend.service;
+package com.aritako.shortly.backend.auth.service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -9,10 +9,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.aritako.shortly.backend.model.LoginSession;
-import com.aritako.shortly.backend.model.User;
-import com.aritako.shortly.backend.repository.LoginSessionRepository;
-import com.aritako.shortly.backend.repository.UserRepository;
+import com.aritako.shortly.backend.auth.model.LoginSession;
+import com.aritako.shortly.backend.auth.repository.LoginSessionRepository;
+import com.aritako.shortly.backend.shared.service.JwtService;
+import com.aritako.shortly.backend.user.model.User;
+import com.aritako.shortly.backend.user.repository.UserRepository;
+
 @Service
 public class AuthService {
   

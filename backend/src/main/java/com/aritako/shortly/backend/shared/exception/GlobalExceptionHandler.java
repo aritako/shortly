@@ -1,4 +1,4 @@
-package com.aritako.shortly.backend.exception;
+package com.aritako.shortly.backend.shared.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

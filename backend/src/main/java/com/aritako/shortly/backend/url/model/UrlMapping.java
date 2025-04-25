@@ -1,8 +1,10 @@
-package com.aritako.shortly.backend.model;
+package com.aritako.shortly.backend.url.model;
 
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+
+import com.aritako.shortly.backend.user.model.User;
 
 @Entity
 @Table(name = "url_mappings")

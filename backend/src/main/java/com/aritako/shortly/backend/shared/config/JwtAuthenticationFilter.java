@@ -1,4 +1,4 @@
-package com.aritako.shortly.backend.config;
+package com.aritako.shortly.backend.shared.config;
 
 import java.io.IOException;
 
@@ -8,9 +8,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.aritako.shortly.backend.repository.UserRepository;
-import com.aritako.shortly.backend.service.JwtService;
-import com.aritako.shortly.backend.model.User;
+import com.aritako.shortly.backend.shared.service.JwtService;
+import com.aritako.shortly.backend.user.model.User;
+import com.aritako.shortly.backend.user.repository.UserRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
