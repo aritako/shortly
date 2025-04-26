@@ -1,11 +1,15 @@
 package com.aritako.shortly.backend.url.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 import com.aritako.shortly.backend.user.model.User;
 
+@Data
 @Entity
 @Table(name = "url_mappings")
 public class UrlMapping {
@@ -41,43 +45,43 @@ public class UrlMapping {
   // #endregion
 
   // #region Getters
-  public Long getId(){
-    return id;
-  }
+  // public Long getId(){
+  //   return id;
+  // }
 
-  public User getUser(){
-    return user;
-  }
+  // public User getUser(){
+  //   return user;
+  // }
 
-  public Long getClickCount(){
-    return clickCount;
-  }
+  // public Long getClickCount(){
+  //   return clickCount;
+  // }
 
-  public String getOriginalUrl(){
-    return originalUrl;
-  }
+  // public String getOriginalUrl(){
+  //   return originalUrl;
+  // }
   // #endregion
 
   // #region Setters
-  public void setUserId(User user){
-    this.user = user;
-  }
+  // public void setUserId(User user){
+  //   this.user = user;
+  // }
 
-  public void setOriginalUrl(String originalUrl){
-    this.originalUrl = originalUrl;
-  }
+  // public void setOriginalUrl(String originalUrl){
+  //   this.originalUrl = originalUrl;
+  // }
 
-  public void setShortCode(String shortCode){
-    this.shortCode = shortCode;
-  }
+  // public void setShortCode(String shortCode){
+  //   this.shortCode = shortCode;
+  // }
 
   public void incrementClickCount(){
     this.clickCount += 1;
   }
 
-  public void setClickCount(Long clickCount){
-    this.clickCount = clickCount;
-  }
+  // public void setClickCount(Long clickCount){
+  //   this.clickCount = clickCount;
+  // }
   //#endregion 
 
 }

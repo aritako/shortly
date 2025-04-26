@@ -2,17 +2,20 @@ package com.aritako.shortly.backend.url.service;
 
 import java.util.*;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.aritako.shortly.backend.url.dto.UrlMappingDTO;
 import com.aritako.shortly.backend.url.model.UrlMapping;
 import com.aritako.shortly.backend.url.repository.UrlRepository;
 import com.aritako.shortly.backend.user.model.User;
 @Service
 public class UrlService {
   private final UrlRepository urlRepository;
-
-  public UrlService(UrlRepository urlRepository){
+  private final ModelMapper modelMapper;
+  public UrlService(UrlRepository urlRepository, ModelMapper modelMapper){
     this.urlRepository = urlRepository;
+    this.modelMapper = modelMapper;
   }
 
   public String shortenUrl(User user, String originalUrl, String defaultShortCode){
@@ -48,8 +51,10 @@ public class UrlService {
     return urlMapping;
   }
 
-  public List<UrlMapping> getUrlMappingList(User user){
+  public List<UrlMappingDTO> getUrlMappingList(User user){
     List<UrlMapping> urlMappingList = urlRepository.findAllByUser(user);
-    return urlMappingList;
+    return urlMappingList.stream()
+      .map(urlMapping -> modelMapper.map(urlMapping, UrlMappingDTO.class))
+      .toList();
   }
 }

@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aritako.shortly.backend.auth.service.AuthService;
+import com.aritako.shortly.backend.url.dto.UrlMappingDTO;
 import com.aritako.shortly.backend.url.model.UrlMapping;
 import com.aritako.shortly.backend.url.service.UrlService;
 import com.aritako.shortly.backend.user.model.User;
@@ -28,8 +30,14 @@ public class UrlController {
   }
 
   @GetMapping("/")
-  public ResponseEntity<List<UrlMapping>> getUrlMappingList(){
+  public ResponseEntity<List<UrlMappingDTO>> getUrlMappingList(){
     User user = this.authService.getAuthenticatedUser();
     return ResponseEntity.ok(this.urlService.getUrlMappingList(user));
+  }
+  
+  @GetMapping("/{shortCode}")
+  public ResponseEntity<UrlMapping> getOriginalUrl(@PathVariable String shortCode){
+    UrlMapping urlMappingInfo = urlService.getUrlMappingInfo(shortCode);
+    return ResponseEntity.ok(urlMappingInfo);
   }
 }
