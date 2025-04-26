@@ -1,6 +1,5 @@
 package com.aritako.shortly.backend.url.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aritako.shortly.backend.auth.service.AuthService;
 import com.aritako.shortly.backend.url.dto.UrlMappingDTO;
 import com.aritako.shortly.backend.url.dto.UrlMappingListDTO;
-import com.aritako.shortly.backend.url.model.UrlMapping;
 import com.aritako.shortly.backend.url.service.UrlService;
 import com.aritako.shortly.backend.user.model.User;
 
