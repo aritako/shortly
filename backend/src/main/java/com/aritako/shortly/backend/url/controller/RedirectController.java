@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aritako.shortly.backend.url.service.UrlMappingService;
+import com.aritako.shortly.backend.url.service.UrlService;
 
 @RestController
 public class RedirectController {
@@ -16,15 +16,15 @@ public class RedirectController {
   @Value("${BASE_URL}")
   private String baseUrl;
 
-  private final UrlMappingService urlMappingService;
+  private final UrlService urlService;
 
-  public RedirectController(UrlMappingService urlMappingService){
-    this.urlMappingService = urlMappingService;
+  public RedirectController(UrlService urlService){
+    this.urlService = urlService;
   }
 
   @GetMapping("/{shortCode}")
   public ResponseEntity<Void> redirect(@PathVariable String shortCode){
-    String target = urlMappingService.redirectUrl(shortCode);
+    String target = urlService.redirectUrl(shortCode);
     return ResponseEntity.status(HttpStatus.FOUND)
     .header(HttpHeaders.LOCATION, target)
     .build();
