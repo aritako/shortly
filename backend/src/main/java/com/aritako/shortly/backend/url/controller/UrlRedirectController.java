@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aritako.shortly.backend.url.service.UrlService;
 
 @RestController
-public class RedirectController {
+public class UrlRedirectController {
   
   @Value("${BASE_URL}")
   private String baseUrl;
 
   private final UrlService urlService;
 
-  public RedirectController(UrlService urlService){
+  public UrlRedirectController(UrlService urlService){
     this.urlService = urlService;
   }
 
