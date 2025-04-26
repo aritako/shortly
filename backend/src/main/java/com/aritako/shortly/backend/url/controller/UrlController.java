@@ -34,10 +34,11 @@ public class UrlController {
     User user = this.authService.getAuthenticatedUser();
     return ResponseEntity.ok(this.urlService.getUrlMappingList(user));
   }
-  
+
   @GetMapping("/{shortCode}")
   public ResponseEntity<UrlMapping> getOriginalUrl(@PathVariable String shortCode){
-    UrlMapping urlMappingInfo = urlService.getUrlMappingInfo(shortCode);
+    User user = this.authService.getAuthenticatedUser();
+    UrlMapping urlMappingInfo = urlService.getUrlMappingInfo(user, shortCode);
     return ResponseEntity.ok(urlMappingInfo);
   }
 }

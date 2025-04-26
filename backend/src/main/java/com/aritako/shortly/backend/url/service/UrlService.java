@@ -44,10 +44,13 @@ public class UrlService {
     urlRepository.save(urlMapping);
   }
 
-  public UrlMapping getUrlMappingInfo(String shortCode){
+  public UrlMapping getUrlMappingInfo(User user, String shortCode){
     UrlMapping urlMapping = urlRepository
     .findByShortCode(shortCode)
     .orElseThrow(() -> new RuntimeException("Short code not found: " + shortCode));
+    if (!user.getId().equals(urlMapping.getUser().getId())) {
+      throw new RuntimeException("Invalid request. User " + user.getUsername() + " does not own this shortcode.");
+    }
     return urlMapping;
   }
 
