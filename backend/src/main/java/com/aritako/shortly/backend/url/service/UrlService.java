@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.aritako.shortly.backend.url.dto.UrlMappingDTO;
+import com.aritako.shortly.backend.url.dto.UrlMappingListDTO;
 import com.aritako.shortly.backend.url.model.UrlMapping;
 import com.aritako.shortly.backend.url.repository.UrlRepository;
 import com.aritako.shortly.backend.user.model.User;
@@ -44,20 +45,23 @@ public class UrlService {
     urlRepository.save(urlMapping);
   }
 
-  public UrlMapping getUrlMappingInfo(User user, String shortCode){
+  public UrlMappingDTO getUrlMappingInfo(User user, String shortCode){
     UrlMapping urlMapping = urlRepository
     .findByShortCode(shortCode)
     .orElseThrow(() -> new RuntimeException("Short code not found: " + shortCode));
     if (!user.getId().equals(urlMapping.getUser().getId())) {
       throw new RuntimeException("Invalid request. User " + user.getUsername() + " does not own this shortcode.");
     }
-    return urlMapping;
+    return modelMapper.map(urlMapping, UrlMappingDTO.class);
   }
 
-  public List<UrlMappingDTO> getUrlMappingList(User user){
-    List<UrlMapping> urlMappingList = urlRepository.findAllByUser(user);
-    return urlMappingList.stream()
+  public UrlMappingListDTO getUrlMappingList(User user){
+    List<UrlMappingDTO> urlMappings = urlRepository
+      .findAllByUser(user)
+      .stream()
       .map(urlMapping -> modelMapper.map(urlMapping, UrlMappingDTO.class))
       .toList();
+    UrlMappingListDTO urlMappingList = new UrlMappingListDTO(urlMappings.size(), urlMappings);
+    return urlMappingList;
   }
 }
