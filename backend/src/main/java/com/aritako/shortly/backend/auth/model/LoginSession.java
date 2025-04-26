@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import com.aritako.shortly.backend.user.model.User;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "login_session")
 public class LoginSession {
@@ -44,70 +46,6 @@ public class LoginSession {
     this.ipAddress = ipAddress;
     this.userAgent = userAgent;
     this.expiresAt = expiresAt;
-  }
-  //#endregion
-
-  //#region Getters
-  public Long getId(){
-    return id;
-  }
-
-  public User getUser(){
-    return user;
-  }
-
-  public String getRefreshToken(){
-    return refreshToken;
-  }
-
-  public String getIpAddress(){
-    return ipAddress;
-  }
-
-  public String getUserAgent(){
-    return userAgent;
-  }
-
-  public LocalDateTime getCreatedAt(){
-    return createdAt;
-  }
-
-  public LocalDateTime getExpiresAt(){
-    return expiresAt;
-  }
-
-  public String getStatus(){
-    return status;
-  }
-  //#endregion
-
-  //#region Setters
-  public void setId(Long id){
-    this.id = id;
-  }
-
-  public void setUser(User user){
-    this.user = user;
-  }
-
-  public void setRefreshToken(String refreshToken){
-    this.refreshToken = refreshToken;
-  }
-
-  public void setIpAddress(String ipAddress){
-    this.ipAddress = ipAddress;
-  }
-
-  public void setUserAgent(String userAgent){
-    this.userAgent = userAgent;
-  }
-
-  public void setExpiresAt(LocalDateTime expiresAt){
-    this.expiresAt = expiresAt;
-  }
-
-  public void setStatus(String status){
-    this.status = status;
   }
   //#endregion
 }
