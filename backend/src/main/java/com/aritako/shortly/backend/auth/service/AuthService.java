@@ -140,7 +140,6 @@ public class AuthService {
   }
   //#endregion
 
-
   //#region Utility methods
   private boolean isValidPasswordLength(String password) {
     return password.length() >= 8;
