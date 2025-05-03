@@ -29,6 +29,10 @@ public class UrlMapping {
 
   @Column(name = "created_at")
   private LocalDateTime createdAt = LocalDateTime.now();
+  
+
+  @Column(name = "status")
+  private String status = "ACTIVE";
 
   // #region Constructor
   public UrlMapping(){}

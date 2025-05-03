@@ -64,4 +64,17 @@ public class UrlService {
     UrlMappingListDTO urlMappingList = new UrlMappingListDTO(urlMappings.size(), urlMappings);
     return urlMappingList;
   }
+
+  public void deleteUrlMapping(User user, String shortCode){
+    UrlMapping urlMapping = this.urlRepository
+    .findByShortCode(shortCode)
+    .orElseThrow(() -> new RuntimeException("Short code not found: " + shortCode));
+
+    if (!user.equals(urlMapping.getUser())){
+      throw new RuntimeException("Invalid request. User " + user.getUsername() + " does not own this short code.");
+    }
+
+    urlMapping.setStatus("INACTIVE");
+    urlRepository.save(urlMapping);
+  }
 }
