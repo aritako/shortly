@@ -13,10 +13,13 @@ export default function Home() {
           Create short links, Share them anywhere. No BS.
         </h3>
         <div className="flex gap-2">
-          <Button className="px-8 py-5 cursor-pointer">
+          <Button className="px-8 py-5 min-w-40 cursor-pointer">
             Get Started <ArrowRight />
           </Button>
-          <Button variant="outline" className="px-8 py-5 cursor-pointer">
+          <Button
+            variant="outline"
+            className="px-8 py-5 min-w-40 cursor-pointer"
+          >
             Learn More
           </Button>
         </div>
