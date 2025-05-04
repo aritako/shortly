@@ -3,6 +3,7 @@ import Page from '@/components/custom/Page';
 import { Button } from '@/components/ui/button';
 import ProductDemo from '@/features/landing/ProductDemo';
 import { ArrowRight } from 'lucide-react';
+import { redirect } from 'next/navigation';
 export default function Home() {
   return (
     <Page className="gap-12">
@@ -14,7 +15,10 @@ export default function Home() {
           Create short links, Share them anywhere. No BS.
         </h3>
         <div className="flex gap-2">
-          <Button className="px-8 py-5 min-w-40 cursor-pointer">
+          <Button
+            onClick={() => redirect('/signup')}
+            className="px-8 py-5 min-w-40 cursor-pointer"
+          >
             Get Started <ArrowRight />
           </Button>
           <Button
