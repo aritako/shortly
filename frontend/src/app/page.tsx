@@ -1,10 +1,11 @@
 'use client';
 import Page from '@/components/custom/Page';
 import { Button } from '@/components/ui/button';
+import ProductDemo from '@/features/landing/ProductDemo';
 import { ArrowRight } from 'lucide-react';
 export default function Home() {
   return (
-    <Page>
+    <Page className="gap-12">
       <section className="flex flex-col items-center gap-4">
         <h1 className="font-bold text-5xl">
           Shorten, share, and track your links.
@@ -23,6 +24,9 @@ export default function Home() {
             Learn More
           </Button>
         </div>
+      </section>
+      <section className="flex justify-center">
+        <ProductDemo />
       </section>
     </Page>
   );

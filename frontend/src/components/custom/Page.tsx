@@ -1,13 +1,17 @@
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 interface PageProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-export default function Page({ children }: PageProps) {
+export default function Page({ children, className }: PageProps) {
   return (
     <div className="flex w-full justify-center p-16">
-      <div className="max-w-5xl w-full">{children}</div>
+      <div className={cn('flex flex-col max-w-5xl w-full gap-4', className)}>
+        {children}
+      </div>
     </div>
   );
 }
