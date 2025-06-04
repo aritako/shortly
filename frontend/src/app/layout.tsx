@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { geistSans, geistMono } from '@/lib/fonts';
 import './globals.css';
-import Navbar from '@/features/landing/Navbar';
 
 export const metadata: Metadata = {
   title: 'Shortly',
@@ -17,7 +16,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
         {children}
       </body>
     </html>
