@@ -5,7 +5,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import AppSidebar from '@/features/dashboard/sidebar/AppSidebar';
-import DashboardContent from '@/features/dashboard/DashboardContent';
+import DashboardContent from '@/features/dashboard/content/DashboardContent';
 
 export default function DashboardPage() {
   return (
