@@ -5,6 +5,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import AppSidebar from '@/features/dashboard/sidebar/AppSidebar';
+import DashboardContent from '@/features/dashboard/DashboardContent';
 
 export default function DashboardPage() {
   return (
@@ -18,7 +19,7 @@ export default function DashboardPage() {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          {/* <DashboardContent /> */}
+          <DashboardContent />
         </div>
       </SidebarInset>
     </SidebarProvider>
