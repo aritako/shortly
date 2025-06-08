@@ -37,6 +37,7 @@ public class SecurityConfig {
           .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> auth
           .requestMatchers("/api/auth/**").permitAll() // public routes
+          .requestMatchers("/api/test/**").permitAll() // public routes
           .requestMatchers(HttpMethod.GET, "/{shortCode:[a-zA-z0-9]+}").permitAll()
           .anyRequest().authenticated() // everything else needs login
       )
