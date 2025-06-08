@@ -8,7 +8,7 @@ interface PageProps {
 
 export default function Page({ children, className }: PageProps) {
   return (
-    <div className="flex w-full justify-center p-16">
+    <div className="flex w-full justify-center p-12">
       <div className={cn('flex flex-col max-w-5xl w-full gap-4', className)}>
         {children}
       </div>
