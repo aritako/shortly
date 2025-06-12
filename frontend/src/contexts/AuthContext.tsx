@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import api from '@/lib/axios';
 import AuthClientProvider from '@/contexts/AuthClientProvider';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   token: string | null;
@@ -15,7 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setTokenState] = useState<string | null>(null);
-
+  const router = useRouter();
   const setToken = useCallback((token: string) => {
     setTokenState(token);
   }, []);
@@ -23,6 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => {
     setTokenState(null);
     api.post('/api/auth/logout', {});
+    router.push('/');
   }, []);
 
   const refreshToken = useCallback(async () => {
