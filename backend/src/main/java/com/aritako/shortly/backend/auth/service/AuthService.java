@@ -16,6 +16,9 @@ import com.aritako.shortly.backend.auth.repository.LoginSessionRepository;
 import com.aritako.shortly.backend.shared.service.JwtService;
 import com.aritako.shortly.backend.user.model.User;
 import com.aritako.shortly.backend.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
 
 @Service
 public class AuthService {
@@ -153,4 +156,36 @@ public class AuthService {
     return password.chars().anyMatch(ch -> SPECIAL_CHARACTERS.indexOf(ch) >= 0);
   }
   //#endregion
+
+  // Helper to set the refresh token cookie
+  public void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
+    Cookie cookie = new Cookie("refreshToken", refreshToken);
+    cookie.setHttpOnly(true);
+    cookie.setSecure(true); // Set to true in production (requires HTTPS)
+    cookie.setPath("/");
+    cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+    response.addCookie(cookie);
+  }
+
+  // Helper to clear the refresh token cookie
+  public void clearRefreshTokenCookie(HttpServletResponse response) {
+    Cookie cookie = new Cookie("refreshToken", "");
+    cookie.setHttpOnly(true);
+    cookie.setSecure(true); // Set to true in production
+    cookie.setPath("/");
+    cookie.setMaxAge(0);
+    response.addCookie(cookie);
+  }
+
+  // Helper to extract refresh token from cookie
+  public String extractRefreshTokenFromCookie(HttpServletRequest request) {
+    if (request.getCookies() != null) {
+        for (Cookie cookie : request.getCookies()) {
+            if ("refreshToken".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+    }
+    return null;
+  }
 }

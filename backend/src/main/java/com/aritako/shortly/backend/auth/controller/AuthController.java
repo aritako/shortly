@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.aritako.shortly.backend.auth.service.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
-
+import jakarta.servlet.http.HttpServletResponse;
+  
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -24,33 +25,46 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<Map<String, String>> register(@RequestBody Map<String, String> body){
-    String username = body.get("username");
-    String password = body.get("password");
-    String email = body.get("email");
-    return ResponseEntity.ok(authService.register(username, email, password));
-  }
+    public ResponseEntity<Map<String, String>> register(@RequestBody Map<String, String> body, HttpServletResponse response){
+      String username = body.get("username");
+      String password = body.get("password");
+      String email = body.get("email");
+      Map<String, String> tokens = authService.register(username, email, password);
+      authService.setRefreshTokenCookie(response, tokens.get("refreshToken"));
+      return ResponseEntity.ok(Map.of("accessToken", tokens.get("accessToken")));
+    }
 
   @PostMapping("/login")
-  public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body, HttpServletRequest request){
+  public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body, HttpServletRequest request, HttpServletResponse response){
     String username = body.get("username");
     String password = body.get("password");
 
     String ipAddress = request.getRemoteAddr();
     String userAgent = request.getHeader("User-Agent");
-    return ResponseEntity.ok(authService.login(username, password, ipAddress, userAgent));
+    Map<String, String> tokens = authService.login(username, password, ipAddress, userAgent);
+    authService.setRefreshTokenCookie(response, tokens.get("refreshToken"));
+    return ResponseEntity.ok(Map.of("accessToken", tokens.get("accessToken")));
   }
 
   @PostMapping("/refresh")
-  public ResponseEntity<Map<String, String>> refresh(@RequestBody Map<String, String> body){
-    String refreshToken = body.get("refreshToken");
-    return ResponseEntity.ok(authService.refreshAccessToken(refreshToken));
+  public ResponseEntity<Map<String, String>> refresh(HttpServletRequest request, HttpServletResponse response){
+    String refreshToken = authService.extractRefreshTokenFromCookie(request);
+    if (refreshToken == null) {
+      throw new RuntimeException("No refresh token cookie found!");
+    }
+    Map<String, String> tokens = authService.refreshAccessToken(refreshToken);
+    // Optionally rotate refresh token here and set new cookie
+    // authService.setRefreshTokenCookie(response, tokens.get("refreshToken"));
+    return ResponseEntity.ok(Map.of("accessToken", tokens.get("accessToken")));
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<Void> logout(@RequestBody Map<String, String> body){
-    String refreshToken = body.get("refreshToken");
-    authService.logout(refreshToken);
+  public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response){
+    String refreshToken = authService.extractRefreshTokenFromCookie(request);
+    if (refreshToken != null) {
+      authService.logout(refreshToken);
+    }
+    authService.clearRefreshTokenCookie(response);
     return ResponseEntity.noContent().build();
   }
 }
