@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext, useState, useCallback } from 'react';
+import { apiClient } from '@/lib/api-client';
 
 interface AuthContextType {
   token: string | null;
@@ -21,15 +22,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => {
     setTokenState(null);
     // Optionally call backend to clear refresh token cookie
-    fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+    apiClient.post('/api/auth/logout', {});
   }, []);
 
   const refreshToken = useCallback(async () => {
     try {
-      const response = await fetch('/api/auth/refresh', {
-        method: 'POST',
-        credentials: 'include',
-      });
+      const response = await apiClient.post('/api/auth/refresh', {});
       if (!response.ok) return false;
       const data = await response.json();
       if (data.accessToken) {

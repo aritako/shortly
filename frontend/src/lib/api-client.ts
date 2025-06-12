@@ -9,7 +9,8 @@ class ApiClient {
     url: string,
     options: RequestInit = {},
     token?: string,
-    refreshTokenFn?: () => Promise<boolean>
+    refreshTokenFn?: () => Promise<boolean>,
+    getToken?: () => string | null
   ): Promise<Response> {
     let headers: Record<string, string> = Object.assign(
       { 'Content-Type': 'application/json' },
@@ -26,15 +27,18 @@ class ApiClient {
     });
 
     // If unauthorized, try to refresh token and retry once
-    if (response.status === 401 && refreshTokenFn) {
+    if (response.status === 401 && refreshTokenFn && getToken) {
       const refreshed = await refreshTokenFn();
-      if (refreshed && token) {
-        headers['Authorization'] = `Bearer ${token}`;
-        response = await fetch(`${this.baseUrl}${url}`, {
-          ...options,
-          headers,
-          credentials: 'include',
-        });
+      if (refreshed) {
+        const newToken = getToken();
+        if (newToken) {
+          headers['Authorization'] = `Bearer ${newToken}`;
+          response = await fetch(`${this.baseUrl}${url}`, {
+            ...options,
+            headers,
+            credentials: 'include',
+          });
+        }
       }
     }
     return response;
@@ -44,13 +48,15 @@ class ApiClient {
     url: string,
     options: RequestInit = {},
     token?: string,
-    refreshTokenFn?: () => Promise<boolean>
+    refreshTokenFn?: () => Promise<boolean>,
+    getToken?: () => string | null
   ) {
     return this.fetchWithAuth(
       url,
       { ...options, method: 'GET' },
       token,
-      refreshTokenFn
+      refreshTokenFn,
+      getToken
     );
   }
 
@@ -59,7 +65,8 @@ class ApiClient {
     data: any,
     options: RequestInit = {},
     token?: string,
-    refreshTokenFn?: () => Promise<boolean>
+    refreshTokenFn?: () => Promise<boolean>,
+    getToken?: () => string | null
   ) {
     return this.fetchWithAuth(
       url,
@@ -69,7 +76,8 @@ class ApiClient {
         body: JSON.stringify(data),
       },
       token,
-      refreshTokenFn
+      refreshTokenFn,
+      getToken
     );
   }
 
@@ -78,7 +86,8 @@ class ApiClient {
     data: any,
     options: RequestInit = {},
     token?: string,
-    refreshTokenFn?: () => Promise<boolean>
+    refreshTokenFn?: () => Promise<boolean>,
+    getToken?: () => string | null
   ) {
     return this.fetchWithAuth(
       url,
@@ -88,7 +97,8 @@ class ApiClient {
         body: JSON.stringify(data),
       },
       token,
-      refreshTokenFn
+      refreshTokenFn,
+      getToken
     );
   }
 
@@ -96,13 +106,15 @@ class ApiClient {
     url: string,
     options: RequestInit = {},
     token?: string,
-    refreshTokenFn?: () => Promise<boolean>
+    refreshTokenFn?: () => Promise<boolean>,
+    getToken?: () => string | null
   ) {
     return this.fetchWithAuth(
       url,
       { ...options, method: 'DELETE' },
       token,
-      refreshTokenFn
+      refreshTokenFn,
+      getToken
     );
   }
 }
