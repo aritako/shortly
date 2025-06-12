@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/axios';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
@@ -27,9 +27,9 @@ export default function LoginPage() {
 
   const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
     try {
-      const response = await apiClient.post('/api/auth/login', data);
-      if (response.ok) {
-        const { accessToken } = await response.json();
+      const response = await api.post('/api/auth/login', data);
+      if (response.status === 200) {
+        const { accessToken } = response.data;
         setToken(accessToken);
         const from = searchParams.get('from');
         router.push(from || '/dashboard');

@@ -1,6 +1,7 @@
 'use client';
 import { createContext, useContext, useState, useCallback } from 'react';
-import { apiClient } from '@/lib/api-client';
+import api from '@/lib/axios';
+import AuthClientProvider from '@/contexts/AuthClientProvider';
 
 interface AuthContextType {
   token: string | null;
@@ -21,15 +22,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(() => {
     setTokenState(null);
-    // Optionally call backend to clear refresh token cookie
-    apiClient.post('/api/auth/logout', {});
+    api.post('/api/auth/logout', {});
   }, []);
 
   const refreshToken = useCallback(async () => {
     try {
-      const response = await apiClient.post('/api/auth/refresh', {});
-      if (!response.ok) return false;
-      const data = await response.json();
+      const response = await api.post('/api/auth/refresh', {});
+      if (response.status !== 200) return false;
+      const data = response.data;
       if (data.accessToken) {
         setTokenState(data.accessToken);
         return true;
@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{ token, isAuthenticated, setToken, logout, refreshToken }}
     >
-      {children}
+      <AuthClientProvider>{children}</AuthClientProvider>
     </AuthContext.Provider>
   );
 }
