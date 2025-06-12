@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { geistSans, geistMono } from '@/lib/fonts';
 import './globals.css';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 export const metadata: Metadata = {
   title: 'Shortly',
@@ -16,7 +17,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

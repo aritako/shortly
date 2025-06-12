@@ -4,7 +4,7 @@ import Page from '@/components/custom/Page';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useSignUp } from '@/features/auth/hooks';
-import { SignUpFormType, signUpFormSchema } from '@/features/auth/schemas';
+import { SignUpFormType, signUpFormSchema } from '@/schemas/auth';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
 import React from 'react';

@@ -3,34 +3,41 @@
 import Page from '@/components/custom/Page';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import React from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@/components/ui/label';
-import { loginFormSchema, LoginFormType } from '@/features/auth/schemas';
+import { LoginFormType, loginFormSchema } from '@/schemas/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useLogin } from '@/features/auth/hooks';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { apiClient } from '@/lib/api-client';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { setToken } = useAuth();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<LoginFormType>({
     resolver: zodResolver(loginFormSchema),
   });
 
   const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
     try {
-      const responseData = await useLogin(data);
-      if (responseData) {
-        localStorage.setItem('accessToken', responseData.accessToken);
-        router.push('/dashboard');
+      const response = await apiClient.post('/api/auth/login', data);
+      if (response.ok) {
+        const { accessToken } = await response.json();
+        setToken(accessToken);
+        const from = searchParams.get('from');
+        router.push(from || '/dashboard');
+      } else {
+        throw new Error('Response not ok from login');
       }
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error('Login failed:', error);
     }
   };
 
@@ -38,9 +45,9 @@ export default function LoginPage() {
     <Page className="max-w-md">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col items-center gap-2">
-          <span className="font-bold text-4xl">Welcome Back.</span>
+          <span className="font-bold text-4xl">Welcome Back</span>
           <span className="text-muted-foreground">
-            Enter your credentials to login your account.
+            Enter your credentials to access your account.
           </span>
         </div>
         <div className="my-4 space-y-4 flex flex-col items-center gap-2">
@@ -49,6 +56,7 @@ export default function LoginPage() {
             <Input
               id="username"
               placeholder="coolguy123"
+              required
               className="m-0"
               {...register('username')}
             />
@@ -73,13 +81,21 @@ export default function LoginPage() {
               </span>
             )}
           </div>
-          <Button className="w-full cursor-pointer my-1">Login</Button>
-          <span className="text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link href="/signup" className="text-primary hover:underline">
-              Sign Up
+          <Button className="w-full cursor-pointer my-1">Log In</Button>
+          <div className="flex flex-col items-center gap-2">
+            <Link
+              href="/forgot-password"
+              className="text-sm text-primary hover:underline"
+            >
+              Forgot your password?
             </Link>
-          </span>
+            <span className="text-sm text-muted-foreground">
+              Don't have an account?{' '}
+              <Link href="/signup" className="text-primary hover:underline">
+                Sign Up
+              </Link>
+            </span>
+          </div>
         </div>
       </form>
     </Page>

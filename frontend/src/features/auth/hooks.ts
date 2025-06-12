@@ -1,4 +1,4 @@
-import { SignUpFormType, LoginFormType } from './schemas';
+import { SignUpFormType, LoginFormType } from '@/schemas/auth';
 
 export async function useSignUp(data: SignUpFormType) {
   const response = await fetch(
