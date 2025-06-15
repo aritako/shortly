@@ -3,6 +3,8 @@ package com.aritako.shortly.backend.url.service;
 import java.util.*;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.aritako.shortly.backend.url.dto.UrlMappingDTO;
@@ -55,14 +57,21 @@ public class UrlService {
     return modelMapper.map(urlMapping, UrlMappingDTO.class);
   }
 
-  public UrlMappingListDTO getUrlMappingList(User user){
-    List<UrlMappingDTO> urlMappings = urlRepository
-      .findAllByUser(user)
+  public UrlMappingListDTO getUrlMappingList(User user, int page, int size){
+    Page<UrlMapping> urlMappingsPage = urlRepository.findAllByUser(user, PageRequest.of(page, size));
+    List<UrlMappingDTO> urlMappings = urlMappingsPage
+      .getContent()
       .stream()
       .map(urlMapping -> modelMapper.map(urlMapping, UrlMappingDTO.class))
       .toList();
-    UrlMappingListDTO urlMappingList = new UrlMappingListDTO(urlMappings.size(), urlMappings);
-    return urlMappingList;
+    
+    return new UrlMappingListDTO(
+      (int) urlMappingsPage.getTotalElements(),
+      urlMappingsPage.getTotalPages(),
+      urlMappingsPage.getNumber(),
+      urlMappingsPage.getSize(),
+      urlMappings
+    );
   }
 
   public void deleteUrlMapping(User user, String shortCode){

@@ -18,7 +18,7 @@ export default function DashboardContent() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['urls'],
     queryFn: async () => {
-      const res = await axios.get('/api/url/');
+      const res = await axios.get('/api/url');
       return res.data;
     },
     enabled: isAuthReady,

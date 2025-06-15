@@ -8,6 +8,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UrlMappingListDTO {
-  private int count;
+  private int totalElements;
+  private int totalPages;
+  private int currentPage;
+  private int pageSize;
   private List<UrlMappingDTO> urls;
 }

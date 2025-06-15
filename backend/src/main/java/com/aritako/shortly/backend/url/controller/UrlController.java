@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aritako.shortly.backend.auth.service.AuthService;
@@ -33,10 +34,13 @@ public class UrlController {
     this.authService = authService;
   }
 
-  @GetMapping("/")
-  public ResponseEntity<UrlMappingListDTO> getUrlMappingList(){
+  @GetMapping("")
+  public ResponseEntity<UrlMappingListDTO> getUrlMappingList(
+    @RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue = "10") int size
+  ){
     User user = this.authService.getAuthenticatedUser();
-    return ResponseEntity.ok(this.urlService.getUrlMappingList(user));
+    return ResponseEntity.ok(this.urlService.getUrlMappingList(user, page, size));
   }
 
   @GetMapping("/{shortCode}")
