@@ -12,6 +12,7 @@ import LinksTable from '../links-table/LinksTable';
 import axios from '@/lib/axios';
 import { useIsAuthReady } from '@/stores/authStore';
 import { useQuery } from '@tanstack/react-query';
+import { columns } from '../links-table/columns';
 
 export default function DashboardContent() {
   const isAuthReady = useIsAuthReady();
@@ -56,7 +57,7 @@ export default function DashboardContent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <LinksTable />
+          <LinksTable columns={columns} data={data?.urls ?? []} />
         </CardContent>
       </Card>
     </div>
