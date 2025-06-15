@@ -97,7 +97,7 @@ export default function AppSidebar() {
             <SidebarMenuButton asChild>
               <Button
                 onClick={logout}
-                className="flex items-center gap-2 w-full text-left transition-colors duration-100 bg-red-400 hover:bg-red-700 font-bold text-white hover:text-white py-5"
+                className="flex items-center gap-2 w-full text-left transition-colors duration-100 bg-gray-400 hover:bg-red-700 font-bold text-white hover:text-white py-5"
               >
                 <LogOut className="h-4 w-4" />
                 {open && 'Logout'}
