@@ -7,7 +7,7 @@ import {
 import AppSidebar from '@/features/dashboard/sidebar/AppSidebar';
 import DashboardContent from '@/features/dashboard/content/DashboardContent';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   return (
     <SidebarProvider>
       <AppSidebar />

@@ -1,62 +1,55 @@
 'use client';
-import { createContext, useContext, useState, useCallback } from 'react';
-import api from '@/lib/axios';
-import AuthClientProvider from '@/contexts/AuthClientProvider';
-import { useRouter } from 'next/navigation';
+import { createContext, useContext, useEffect, useState } from 'react';
+import axios from '@/lib/axios'; // axios instance with interceptors
 
 interface AuthContextType {
-  token: string | null;
-  isAuthenticated: boolean;
-  setToken: (token: string) => void;
-  logout: () => void;
-  refreshToken: () => Promise<boolean>;
+  accessToken: string | null;
+  setAccessToken: (token: string | null) => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [token, setTokenState] = useState<string | null>(null);
-  const router = useRouter();
-  const setToken = useCallback((token: string) => {
-    setTokenState(token);
-  }, []);
-
-  const logout = useCallback(() => {
-    setTokenState(null);
-    api.post('/api/auth/logout', {});
-    router.push('/');
-  }, []);
-
-  const refreshToken = useCallback(async () => {
-    try {
-      const response = await api.post('/api/auth/refresh', {});
-      if (response.status !== 200) return false;
-      const data = response.data;
-      if (data.accessToken) {
-        setTokenState(data.accessToken);
-        return true;
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  // Auto-refresh on page load if refreshToken exists
+  useEffect(() => {
+    const refreshAccessToken = async () => {
+      try {
+        const res = await axios.post(
+          '/api/auth/refresh',
+          {},
+          { withCredentials: true }
+        );
+        setAccessToken(res.data.accessToken);
+        import('@/lib/tokenUtils').then((mod) =>
+          mod.setAccessToken(res.data.accessToken)
+        );
+      } catch (err) {
+        console.log('Failed to refresh token', err);
+        setAccessToken(null);
+      } finally {
+        setIsLoading(false);
       }
-      return false;
-    } catch {
-      return false;
-    }
+    };
+
+    refreshAccessToken();
   }, []);
 
-  const isAuthenticated = !!token;
+  useEffect(() => {
+    console.log('Access token updated:', accessToken);
+  }, [accessToken]);
 
   return (
-    <AuthContext.Provider
-      value={{ token, isAuthenticated, setToken, logout, refreshToken }}
-    >
-      <AuthClientProvider>{children}</AuthClientProvider>
+    <AuthContext.Provider value={{ accessToken, setAccessToken, isLoading }}>
+      {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  return ctx;
+};
