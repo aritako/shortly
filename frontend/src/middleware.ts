@@ -16,7 +16,9 @@ export function middleware(req: NextRequest) {
   // If trying to access a protected route without a refresh token
   if (!isPublicPath && !refreshToken) {
     const url = new URL('/login', req.url);
-    url.searchParams.set('from', pathname);
+    if (pathname !== '/login' && pathname !== '/signup' && pathname !== null) {
+      url.searchParams.set('from', pathname);
+    }
     return NextResponse.redirect(url);
   }
 
