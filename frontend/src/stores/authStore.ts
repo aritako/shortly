@@ -14,3 +14,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   setAccessToken: (token) => set({ accessToken: token }),
   setIsLoading: (value) => set({ isLoading: value }),
 }));
+
+export const useIsAuthReady = () =>
+  useAuthStore((s) => !s.isLoading && !!s.accessToken);
