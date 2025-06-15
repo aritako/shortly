@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { getAccessToken, setAccessToken } from './tokenUtils';
 import { useAuthStore } from '@/stores/authStore';
+
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API,
   withCredentials: true,
 });
 
-// Prevent infinite loops
 let isRefreshing = false;
 let failedQueue: any[] = [];
 
@@ -22,10 +21,9 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Request interceptor to attach access token
 instance.interceptors.request.use(
-  async (config) => {
-    const token = getAccessToken(); // from memory
+  (config) => {
+    const token = useAuthStore.getState().accessToken;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -34,7 +32,6 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor for 401
 instance.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -63,8 +60,10 @@ instance.interceptors.response.use(
           { withCredentials: true }
         );
         const newToken = response.data.accessToken;
-        setAccessToken(newToken); // update memory token
+
+        useAuthStore.getState().setAccessToken(newToken); // ✅ directly update store
         processQueue(null, newToken);
+
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return instance(originalRequest);
       } catch (err) {

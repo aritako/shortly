@@ -10,12 +10,12 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import api from '@/lib/axios';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setToken } = useAuth();
+  const setAccessToken = useAuthStore((s) => s.setAccessToken);
 
   const {
     register,
@@ -30,9 +30,8 @@ export default function LoginPage() {
       const response = await api.post('/api/auth/login', data);
       if (response.status === 200) {
         const { accessToken } = response.data;
-        setToken(accessToken);
-        const from = searchParams.get('from');
-        router.push(from || '/dashboard');
+        setAccessToken(accessToken);
+        router.push('/dashboard');
       } else {
         throw new Error('Response not ok from login');
       }

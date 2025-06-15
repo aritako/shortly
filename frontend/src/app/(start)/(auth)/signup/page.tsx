@@ -11,6 +11,8 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useAuthStore } from '@/stores/authStore';
+import api from '@/lib/axios';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -21,12 +23,12 @@ export default function SignUpPage() {
   } = useForm<SignUpFormType>({
     resolver: zodResolver(signUpFormSchema),
   });
-
+  const setAccessToken = useAuthStore((s) => s.setAccessToken);
   const onSubmit: SubmitHandler<SignUpFormType> = async (data) => {
     try {
-      const responseData = await useSignUp(data);
-      if (responseData) {
-        localStorage.setItem('accessToken', responseData.accessToken);
+      const response = await api.post('/api/auth/signup', data);
+      if (response.data) {
+        setAccessToken(response.data.accessToken);
         router.push('/dashboard');
       }
     } catch (error) {

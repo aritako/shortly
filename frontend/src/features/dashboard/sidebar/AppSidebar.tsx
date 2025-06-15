@@ -18,12 +18,25 @@ import { LinkIcon, LogOut } from 'lucide-react';
 import React from 'react';
 import { mainItems, accountItems } from './data';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/stores/authStore';
+import { useRouter } from 'next/navigation';
+import api from '@/lib/axios';
 
 export default function AppSidebar() {
   const { open } = useSidebar();
-  const { logout } = useAuth();
+  const router = useRouter();
+  const setAccessToken = useAuthStore((s) => s.setAccessToken);
+  const logout = async () => {
+    try {
+      await api.post('/api/auth/logout', {}, { withCredentials: true });
+    } catch (err) {
+      console.warn('Logout request failed, proceeding anyway');
+    } finally {
+      setAccessToken(null);
+      router.push('/');
+    }
+  };
   return (
     <Sidebar>
       <SidebarHeader>
